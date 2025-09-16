@@ -100,7 +100,7 @@ az kusto database-principal-assignment create \
   --principal-id $objectId \
   --principal-type App \
   --role Viewer \
-  --name GrafanaViewer
+  --principal-assignment-name "GrafanaViewer"
 
 # -----------------------------
 # Step 4: Start ASA Job
