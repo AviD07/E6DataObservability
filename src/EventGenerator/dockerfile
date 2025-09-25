@@ -1,3 +1,14 @@
-version https://git-lfs.github.com/spec/v1
-oid sha256:9c2db3bd9c1c21df34346676b9ed325827680b8326c6098fc78f0499f0905f5b
-size 373
+# Use .NET 8 runtime
+FROM mcr.microsoft.com/dotnet/runtime:8.0 AS base
+WORKDIR /app
+
+FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build
+WORKDIR /src
+COPY . .
+RUN dotnet restore EventGenerator.csproj
+RUN dotnet publish EventGenerator.csproj -c Release -o /app/publish
+
+FROM base AS final
+WORKDIR /app
+COPY --from=build /app/publish .
+ENTRYPOINT ["dotnet", "EventGenerator.dll"]

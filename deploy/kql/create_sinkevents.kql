@@ -1,3 +1,4 @@
-version https://git-lfs.github.com/spec/v1
-oid sha256:e6b20433e92786debd3e38d304cc824395d9e5c97cbef355bf98b656cf3bdd13
-size 1138
+.create table sink_output (query_id: string, event_type: string, query_text: string, user_id: string, database_name: string, duration_ms: long, rows_affected: long, payload: string, event_time: datetime, ingestion_time: datetime)
+.create-or-alter table sink_output ingestion json mapping 'sink_output_mapping' '[{"column":"query_id","path":"$.query_id","datatype":"string"}, {"column":"event_type","path":"$.event_type","datatype":"string"}, {"column":"query_text","path":"$.query_text","datatype":"string"}, {"column":"user_id","path":"$.user_id","datatype":"string"}, {"column":"database_name","path":"$.database_name","datatype":"string"}, {"column":"duration_ms","path":"$.duration_ms","datatype":"long"}, {"column":"rows_affected","path":"$.rows_affected","datatype":"long"}, {"column":"payload","path":"$.payload","datatype":"string"}, {"column":"event_time","path":"$.event_time","datatype":"datetime"}, {"column":"ingestion_time","path":"$.ingestion_time","datatype":"datetime"}]'
+.alter table sink_output policy ingestionbatching @'{"MaximumBatchingTimeSpan":"00:00:10"}'
+.alter table sink_output policy streamingingestion enable

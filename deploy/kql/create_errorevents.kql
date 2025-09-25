@@ -1,3 +1,5 @@
-version https://git-lfs.github.com/spec/v1
-oid sha256:307a3dbec78cdead34a3472cce4b08c686d876f402f397a65444c5fbf808624e
-size 960
+
+.create table error_events (query_id: string, event_type: string, query_text: string, user_id: string, database_name: string, error: string, event_time: datetime, ingestion_time: datetime)
+.create-or-alter table error_events ingestion json mapping 'error_events_mapping' '[{"column":"query_id","path":"$.query_id","datatype":"string"}, {"column":"event_type","path":"$.event_type","datatype":"string"}, {"column":"query_text","path":"$.query_text","datatype":"string"}, {"column":"user_id","path":"$.user_id","datatype":"string"}, {"column":"database_name","path":"$.database_name","datatype":"string"}, {"column":"error","path":"$.error","datatype":"string"}, {"column":"event_time","path":"$.event_time","datatype":"datetime"}, {"column":"ingestion_time","path":"$.ingestion_time","datatype":"datetime"}]'
+.alter table error_events policy ingestionbatching @'{"MaximumBatchingTimeSpan":"00:00:10"}'
+.alter table error_events policy streamingingestion enable

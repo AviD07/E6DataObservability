@@ -1,3 +1,23 @@
-version https://git-lfs.github.com/spec/v1
-oid sha256:e2bfa6aeea927476b8597a3f4e0c484b3394afddedf23e2daafe00a50c1242c7
-size 612
+using System;
+using System.Text.Json;
+
+public class QueryEvent
+{
+    public string query_id { get; set; }
+    public string timestamp { get; set; }
+    public string event_type { get; set; }
+    public string query_text { get; set; }
+    public Metadata metadata { get; set; }
+    public object payload { get; set; }
+
+    public string ToJson() => JsonSerializer.Serialize(this);
+}
+
+public class Metadata
+{
+    public string user_id { get; set; }
+    public string database { get; set; }
+    public int duration_ms { get; set; }
+    public int rows_affected { get; set; }
+    public string error { get; set; }
+}

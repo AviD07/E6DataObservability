@@ -1,3 +1,30 @@
-version https://git-lfs.github.com/spec/v1
-oid sha256:be863df5f7f35721e23cdd0f52eba3e64df46b73f98611bc0a44868e07115bf3
-size 845
+IMAGE_NAME=azure-deployer
+
+RESOURCE_GROUP ?= avitest
+LOCATION ?= centralindia
+CLUSTER_NAME ?= adxcluster
+DATABASE_NAME ?= telemetrydb
+EVENTHUB_NAMESPACE ?= TestObservabilityE6
+EVENTHUB_NAME ?= telemetryhub
+CONSUMER_GROUP ?= asaconsumer
+ASA_JOB_NAME ?= telemetryasa
+
+build:
+	docker build -t $(IMAGE_NAME) .
+
+deploy: build
+	docker run --rm -it \
+		-v $(PWD):/workspace \
+		$(IMAGE_NAME) \
+		bash -c "az login && \
+		az group create --name $(RESOURCE_GROUP) --location $(LOCATION) && \
+		az deployment group create \
+		  --resource-group $(RESOURCE_GROUP) \
+		  --template-file infra.bicep \
+		  --parameters \
+		    adxDb=$(CLUSTER_NAME) \
+		    kustoDatabaseName=$(DATABASE_NAME) \
+		    eventHubNamespace=$(EVENTHUB_NAMESPACE) \
+		    eventHubName=$(EVENTHUB_NAME) \
+		    consumerGroupName=$(CONSUMER_GROUP) \
+		    asaJobName=$(ASA_JOB_NAME)"

@@ -1,3 +1,22 @@
-version https://git-lfs.github.com/spec/v1
-oid sha256:29567507629d680e67016d0a5793641a01f652187db04b6be6c23192a07d0787
-size 517
+param clusterName string
+param databaseName string
+param asaPrincipalId string
+
+resource cluster 'Microsoft.Kusto/clusters@2023-08-15' existing = {
+  name: clusterName
+}
+
+resource db 'Microsoft.Kusto/clusters/databases@2023-08-15' existing = {
+  name: databaseName
+  parent: cluster
+}
+
+resource asaIngestorRole 'Microsoft.Kusto/clusters/databases/principalAssignments@2023-08-15' = {
+  name: 'asa-ingestor'
+  parent: db
+  properties: {
+    role: 'Admin'
+    principalId: asaPrincipalId
+    principalType: 'App'
+  }
+}

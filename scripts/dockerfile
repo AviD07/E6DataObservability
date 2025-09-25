@@ -1,3 +1,17 @@
-version https://git-lfs.github.com/spec/v1
-oid sha256:c5b2f268bae0522b729919bd477578a37c2ad87511e78ffbc238164ab63a4738
-size 415
+FROM debian:bullseye-slim
+
+# Install dependencies
+RUN apt-get update \
+    && apt-get install -y --no-install-recommends \
+       curl ca-certificates apt-transport-https lsb-release gnupg make git bash \
+       libicu67 \
+    && rm -rf /var/lib/apt/lists/*
+
+# Install Azure CLI
+RUN curl -sL https://aka.ms/InstallAzureCLIDeb | bash
+
+# Install bicep
+RUN az bicep install
+
+WORKDIR /workspace
+ENTRYPOINT ["/bin/bash"]
